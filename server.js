@@ -3,10 +3,22 @@
 var express = require('express');
 var logger = require('morgan');
 var template = require('pug');
+var mongo = require('mongojs');
 
 var MainApp = function() {
 	
 	var self = this;
+
+	if (process.env.OPENSHIFT_MONGODB_DB_PASSWORD) {
+		connection_string = process.env.OPENSHIFT_MONGODB_DB_USERNAME + ':' +
+    		process.env.OPENSHIFT_MONGODB_DB_PASSWORD + '@' +
+    		process.env.OPENSHIFT_MONGODB_DB_HOST + ':' +
+    		process.env.OPENSHIFT_MONGODB_DB_PORT + '/' +
+    		process.env.OPENSHIFT_APP_NAME;
+	} else {
+  		connection_string = 'localhost/apartment453';
+	}
+
 
     /*  ================================================================  */
     /*  Helper functions.                                                 */
@@ -34,6 +46,11 @@ var MainApp = function() {
     	self.templates['login'] = template.compileFile(templateDir + 'login.pug');
     };
 
+    self.connectDatabase = function() {
+    	var db = mongo(connection_string, ['users']);
+    	self.users = db.collection('users');
+    }
+
     /**
      *  Initializes the sample application.
      */
@@ -41,6 +58,7 @@ var MainApp = function() {
         self.setupVariables();
         self.setupTerminationHandlers();
         self.compileTemplates();
+        self.connectDatabase();
     };
 
     /**
