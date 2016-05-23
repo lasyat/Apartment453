@@ -94,7 +94,7 @@ var MainApp = function() {
 
     self.app = express();
     self.app.use(logger('dev'))
-    self.app.use(express.static(__dirname + '/static'));
+    self.app.use(express.static(__dirname + '/public'));
 
     self.app.get('/', function(req, res, next) {
     	try {
