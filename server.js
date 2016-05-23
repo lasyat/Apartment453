@@ -44,6 +44,7 @@ var MainApp = function() {
     	self.templates = {};
     	var templateDir = __dirname + '/source/templates/'
     	self.templates['login'] = template.compileFile(templateDir + 'login.pug');
+        self.templates['content'] = template.compileFile(templateDir + 'content.pug');
     };
 
     self.connectDatabase = function() {
@@ -103,6 +104,15 @@ var MainApp = function() {
     		next(e);
     	}
     });
+
+    self.app.get('/content', function(req, res, next) {
+        try {
+            var html = self.templates['content']();
+            res.send(html);
+        } catch (e) {
+            next(e);
+        }
+    })
 
     /**
      *  Start the server (starts up the sample application).
