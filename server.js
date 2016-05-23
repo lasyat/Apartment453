@@ -3,8 +3,10 @@
 var express = require('express');
 var logger = require('morgan');
 var template = require('pug');
-var mongo = require('mongojs');
-
+var mongo = require('mongodb');
+var mongoose = require('mongoose');
+var accounts = require('./routes/accounts.js');
+var bodyParser = require('body-parser');
 var MainApp = function() {
 	
 	var self = this;
@@ -42,14 +44,23 @@ var MainApp = function() {
 
     self.compileTemplates = function() {
     	self.templates = {};
-    	var templateDir = __dirname + '/source/templates/'
+    	var templateDir = __dirname + '/templates/'
     	self.templates['login'] = template.compileFile(templateDir + 'login.pug');
         self.templates['content'] = template.compileFile(templateDir + 'content.pug');
     };
 
     self.connectDatabase = function() {
-    	var db = mongo(connection_string, ['users']);
-    	self.users = db.collection('users');
+        mongoose.connect(connection_string);
+        self.db = mongoose.connection;
+        self.db.on('error', console.error.bind(console, 'db connection error'));
+        self.db.once('open', function() {
+            console.log('db open');
+        });
+    }
+
+    self.loadModels = function() {
+        self.models = {};
+        self.models.Account = require('./models/account').Account;
     }
 
     /**
@@ -60,6 +71,7 @@ var MainApp = function() {
         self.setupTerminationHandlers();
         self.compileTemplates();
         self.connectDatabase();
+        self.loadModels();
     };
 
     /**
@@ -95,6 +107,10 @@ var MainApp = function() {
     self.app = express();
     self.app.use(logger('dev'))
     self.app.use(express.static(__dirname + '/public'));
+    self.app.use(bodyParser.json());
+
+
+    self.app.use('/accounts', accounts);
 
     self.app.get('/', function(req, res, next) {
     	try {

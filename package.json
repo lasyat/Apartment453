@@ -16,11 +16,15 @@
     "npm": ">= 1.0.0"
   },
   "dependencies": {
-    "express": "^3.4.4",
+    "bcrypt": "^0.8.6",
+    "body-parser": "^1.15.1",
+    "express": "^4.0.0",
     "mongodb": "^2.1.18",
     "mongojs": "^2.4.0",
+    "mongoose": "^4.4.19",
     "morgan": "^1.7.0",
-    "pug": "^2.0.0-alpha7"
+    "pug": "^2.0.0-alpha7",
+    "validator": "^5.2.0"
   },
   "devDependencies": {},
   "bundleDependencies": [],
