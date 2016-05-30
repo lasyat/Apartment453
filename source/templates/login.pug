@@ -2,12 +2,28 @@ doctype html
 
 html
   head
-
+      script(src='/javascripts/bootstrap.min.js')
+      link(rel='stylesheet', href='/stylesheets/bootstrap.min.css')
   body
 
   form
     h3
 
-    input(type='text', placeholder='username')
-    input(type='password', placeholder='password')
-    button(value='login') Login
+    div(class="container col-sm-4")
+        form
+            div.form-group
+                label(for="Username") Username:
+                input(type="text", placeholder="Username", class="form-control")
+
+            div.form-group
+                label(for="Password") Password:
+                input(type="password", name="Password", class="form-control")
+
+            div.form-group
+                button(type="submit", name="Sign In", value="Sign In", class="btn btn-primary col-sm-2") Sign In
+
+
+
+
+    
+  
