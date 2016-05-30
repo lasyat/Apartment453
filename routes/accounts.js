@@ -12,6 +12,18 @@ router.use(function(req, res, next) {
 
 
 router.get('/login', function(req, res, next) {
+	var un = validator.toString(req.body.username);
+	var pw = validator.toString(req.body.password);
+
+	Account.findOne({username: un}, function(err, acc) {
+		if (err) throw err;
+
+		acc.comparePassword(pw, function(err, isMatch) {
+			if (err) throw err;
+			if (isMatch) res.redirect('/content');
+			else res.redirect('/');
+		});
+	});
 	res.send("logged in!")
 });
 
